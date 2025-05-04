@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  prism:
+    image: stoplight/prism:latest
+    command: mock /api.yaml --host 0.0.0.0 --port 8040
+    ports:
+      - "8040:8040"
+    volumes:
+      - ./api.yaml:/api.yaml
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "8080:8080"
+    environment:
+      SWAGGER_JSON: /api.yaml
+    volumes:
+      - ./api.yaml:/api.yaml
+
+  

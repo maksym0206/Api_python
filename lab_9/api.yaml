@@ -1,0 +1,103 @@
+openapi: 3.1.0
+info:
+  title: Library API
+  version: 1.0.0
+paths:
+  /books:
+    get:
+      summary: Get all books
+      responses:
+        '200':
+          description: Book list
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Book'
+              examples:
+                bookExamples:
+                  value:               
+                    - id: "hjjqwhf1nm2f5gds"
+                      title: "Moby-Dick"
+                      author: "Herman Melville"
+                    - id: "vnllayrjqkdaxj23"
+                      title: "The Hobbit"
+                      author: "J.R.R. Tolkien"
+
+    post:
+      summary: Create a book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '201':
+          description: New book created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+              examples:
+                bookExample:
+                  value:
+                    id: "tygs56gq3mzkmfpp"
+                    title: "Jane Eyre"
+                    author: "Charlotte Brontë"
+  /books/{book_id}:
+    get:
+      summary: Get a book
+      parameters:
+        - in: path
+          name: book_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+              examples:
+                bookExample:
+                  value:
+                    id: "ehqwhl21hln50dsj"
+                    title: "To Kill a Mockingbird"
+                    author: "Harper Lee"
+    delete:
+      summary: Delete a Book
+      parameters:
+        - in: path
+          name: book_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Delete book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+              examples:
+                bookExample:
+                  value:
+                    id: "ehqwhl21hln50dsj"
+                    title: "To Kill a Mockingbird"
+                    author: "Harper Lee"
+
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        author:
+          type: string
