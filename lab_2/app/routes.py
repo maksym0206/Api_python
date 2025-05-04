@@ -19,7 +19,7 @@ async def get_books():
 
 @main.get("/{book_id}")
 async def get_books(book_id: int):
-    book = next((book for book in books if book["id"] == book_id),None)
+    book = find_book_by_id(book_id)
     if book is not None:
         return {"book": book}
     else:
@@ -43,10 +43,13 @@ async def create_book(request: Request):
 @main.delete("/{book_id}/delet_book")
 async def delet_book(book_id: int):
     global books
-    book = next((book for book in books if book["id"] == book_id),None)
+    book = find_book_by_id(book_id)
     if book is None:
-        return {"massage": f"book {book_id} Not found"}
-    books = [book for book in books if book["id"] != book_id]
-    return {"massage": f"book {book_id} Succesful deleted"}
+        return {"message": f"Book {book_id} not found"}
+    books = [b for b in books if b["id"] != book_id]
+    return {"message": f"Book {book_id} successfully deleted"}
+
+def find_book_by_id(book_id: int):
+    return next((book for book in books if book["id"] == book_id), None)
 
     
