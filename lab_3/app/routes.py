@@ -13,7 +13,11 @@ def get_books():
     stmt = db.select(Book).order_by(Book.id).limit(per_page).offset((page-1) * per_page)
     books = db.session.scalars(stmt).all()
     books_list=[{"id": book.id, "title":book.title, "author":book.author} for book in books]
-    return jsonify(books_list), 200
+    return jsonify({
+        "books": books_list,
+        "page": page,
+        "per_page": per_page
+    }), 200
 
 @main.route("/books/<int:book_id>", methods=["GET"])
 def get_book(book_id):

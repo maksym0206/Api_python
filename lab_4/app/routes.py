@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, abort, request
+from flask import Blueprint, jsonify, abort, request, url_for
 from marshmallow import ValidationError
 from .models import BookShema, Book
 from app import db
@@ -12,11 +12,14 @@ def get_books():
     last_id = request.args.get("last_id", 0, type=int)
     per_page = request.args.get("per_page", 5, type=int)
     books = Book.query.filter(Book.id > last_id).order_by(Book.id).limit(per_page).all()
-    books_list=[{"id": book.id, "title":book.title, "author":book.author} for book in books]
-    next_id = books[-1].id if books else None
+    if books:
+        next_id = books[-1].id
+        next_page = url_for('main.get_books', last_id=next_id, per_page=per_page, _external=True)
+    else:
+        next_page = None
     return jsonify({
-        "books": books_list,
-        "next_id": next_id
+        "books": book_schema.dump(books),
+        "next_page": next_page
     }), 200
 
 @main.route("/books/<int:book_id>", methods=["GET"])
